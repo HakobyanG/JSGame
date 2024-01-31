@@ -1,11 +1,14 @@
 class Predator {
-    constructor(x, y) {
+    constructor(x, y, index) {
         this.x = x
         this.y = y
+        this.index = index
         this.multiply = 0
         this.directions = [];
         this.energy = 10
     }
+
+    //վանդակի կողքերի կոորդինատներ
     getNewCoordinates() {
         this.directions = [
             [this.x - 1, this.y - 1],
@@ -18,6 +21,7 @@ class Predator {
             [this.x + 1, this.y + 1]
         ];
     }
+
     chooseCell(character) {
         this.getNewCoordinates()
         var found = [];
@@ -25,19 +29,20 @@ class Predator {
             var x = this.directions[i][0];
             var y = this.directions[i][1];
             if (x >= 0 && x < matrix[0].length && y >= 0 && y < matrix.length) {
-                if (matrix[y][x] == character ) {
+                if (matrix[y][x] == character) {
                     found.push(this.directions[i]);
                 }
             }
         }
         return found;
     }
+
     mul() {
         this.multiply++;
         var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
 
-        if (newCell && this.multiply >= 15) {
+        if (newCell && this.multiply >= 10) {
             var newX = newCell[0];
             var newY = newCell[1];
             matrix[newY][newX] = 3;
@@ -47,31 +52,22 @@ class Predator {
             this.multiply = 1;
         }
     }
+
     move() {
         this.energy--
-        var emptyCells = this.chooseCell(0);
+        var emptyCells = this.chooseCell(1);
         var newCell = random(emptyCells);
-        var emptyCells1 = this.chooseCell(1);
-        var newCell1 = random(emptyCells1);
         if (newCell && this.energy >= 0) {
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 3
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
-        } else if (newCell1 && this.energy >= 0) {
-            var newX = newCell1[0];
-            var newY = newCell1[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
-            matrix[this.y][this.x] = 1
-            this.x = newX
-            this.y = newY
         } else if (this.energy < 0) {
-                this.die()
-            }
+            this.die()
         }
-    
+    }
 
     eat() {
         let emptyCells = this.chooseCell(2);
@@ -80,7 +76,7 @@ class Predator {
             this.energy += 2
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 3
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
@@ -95,14 +91,15 @@ class Predator {
             this.move()
         }
     }
+
     energyMinus() {
         let emptyCells = this.chooseCell(4);
         var newCell = random(emptyCells);
         if (newCell) {
-            this.energy -= 2
+            this.energy -= 3
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 3
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
@@ -110,11 +107,13 @@ class Predator {
     }
 
     die() {
-        matrix[this.y][this.x] = 0
-        for (var i in predatorArr) {
-            if (this.x == predatorArr[i].x && this.y == predatorArr[i].y) {
-                predatorArr.splice(i, 1);
-                break;
+        if (this.energy <= 0) {
+            matrix[this.y][this.x] = 0
+            for (var i in predatorArr) {
+                if (this.x == predatorArr[i].x && this.y == predatorArr[i].y) {
+                    predatorArr.splice(i, 1);
+                    break;
+                }
             }
         }
     }

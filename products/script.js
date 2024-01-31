@@ -6,7 +6,7 @@ var matrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 6, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 6, 0, 0, 0, 0, 0],
     [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -21,7 +21,10 @@ var matrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5]
 ];
 
+//size
 var side = 15;
+
+//arrays
 var grassArr = []
 var grassEaterArr = []
 var predatorArr = []
@@ -33,26 +36,26 @@ var grassEaterCreaterArr = []
 function setup() {
     createCanvas(matrix[0].length * side, matrix.length * side);
     background('#acacac');
-    frameRate(3)
+    frameRate(5)
     for (let y = 0; y < matrix.length; y++) {
         for (let x = 0; x < matrix[y].length; x++) {
             if (matrix[y][x] == 1) {
-                let gr = new Grass(x, y)
+                let gr = new Grass(x, y, 1)
                 grassArr.push(gr)
             } else if (matrix[y][x] == 2) {
-                let grE = new GrassEater(x, y)
+                let grE = new GrassEater(x, y, 2)
                 grassEaterArr.push(grE)
             } else if (matrix[y][x] == 3) {
-                let prE = new Predator(x, y)
+                let prE = new Predator(x, y, 3)
                 predatorArr.push(prE)
             } else if (matrix[y][x] == 4) {
-                let eM = new EnergyMinuser(x, y)
+                let eM = new EnergyMinuser(x, y, 4)
                 energyMinuserArr.push(eM)
             } else if (matrix[y][x] == 5) {
-                let gC = new GrassCreater(x, y)
+                let gC = new GrassCreater(x, y, 5)
                 grassCreaterArr.push(gC)
             }else if (matrix[y][x] == 6) {
-                let geC = new GrassEaterCreater(x, y)
+                let geC = new GrassEaterCreater(x, y, 6)
                 grassEaterCreaterArr.push(geC)
             }
         }
@@ -75,7 +78,7 @@ function draw() {
             } else if (matrix[y][x] == 5) {
                 fill('white')
             }else if (matrix[y][x] == 6) {
-                fill('navy blue')
+                fill('red')
             }
             
             rect(x * side, y * side, side, side)
@@ -85,23 +88,31 @@ function draw() {
     for (let i in grassArr) {
         grassArr[i].mul()
     }
+
     for (let i in grassEaterArr) {
         grassEaterArr[i].mul()
         grassEaterArr[i].eat()
     }
+
     for (let i in predatorArr) {
         predatorArr[i].mul()
         predatorArr[i].eat()
     }
+
+    for (let i in energyMinuserArr) {
+        energyMinuserArr[i].mul()
+        energyMinuserArr[i].eat()
+    }
+
     for (let i in grassCreaterArr) {
         grassCreaterArr[i].move()
-        if (grassArr.length < 10) {
+        if (grassArr.length < 5) {
             grassCreaterArr[i].grassCreate()
         }
 
     }for (let i in grassEaterCreaterArr) {
         grassEaterCreaterArr[i].move()
-        if (grassArr.length > 700) {
+        if (grassArr.length > 120) {
             grassEaterCreaterArr[i].grassEaterCreate()
         }
 

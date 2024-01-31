@@ -1,9 +1,12 @@
 class GrassEaterCreater {
-    constructor(x, y) {
+    constructor(x, y, index) {
         this.x = x
         this.y = y
+        this.index = index
         this.directions = [];
+        this.energy = 8
     }
+
     getNewCoordinates() {
         this.directions = [
             [this.x - 1, this.y - 1],
@@ -16,6 +19,7 @@ class GrassEaterCreater {
             [this.x + 1, this.y + 1]
         ];
     }
+
     chooseCell(character) {
         this.getNewCoordinates()
         var found = [];
@@ -30,30 +34,32 @@ class GrassEaterCreater {
         }
         return found;
     }
+
     move() {
+        this.energy--
         var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
         if (newCell) {
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 2
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
         }
     }
+
     grassEaterCreate() {
         var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
 
-        if (newCell ) {
+        if (newCell) {
             var newX = newCell[0];
             var newY = newCell[1];
             matrix[newY][newX] = 2;
 
             var newGrassEater = new GrassEater(newX, newY);
-            grassArr.push(newGrassEater);
+            grassEaterArr.push(newGrassEater);
         }
     }
-
 }

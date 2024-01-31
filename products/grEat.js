@@ -1,7 +1,8 @@
 class GrassEater {
-    constructor(x, y) {
+    constructor(x, y, index) {
         this.x = x
         this.y = y
+        this.index = index
         this.multiply = 0
         this.directions = [];
         this.energy = 5
@@ -19,6 +20,7 @@ class GrassEater {
             [this.x + 1, this.y + 1]
         ];
     }
+
     chooseCell(character) {
         this.getNewCoordinates()
         var found = [];
@@ -39,14 +41,14 @@ class GrassEater {
         var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
 
-        if (newCell && this.multiply >= 15) {
+        if (newCell && this.multiply >= 10) {
             var newX = newCell[0];
             var newY = newCell[1];
             matrix[newY][newX] = 2;
 
             var newGr = new GrassEater(newX, newY);
             grassEaterArr.push(newGr);
-            this.multiply = 0;
+            this.multiply = 5;
         }
     }
 
@@ -57,7 +59,7 @@ class GrassEater {
         if (newCell && this.energy >= 0) {
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 2
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
@@ -75,7 +77,7 @@ class GrassEater {
             this.energy++
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 2
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
@@ -90,6 +92,7 @@ class GrassEater {
             this.move()
         }
     }
+
     energyMinus() {
         let emptyCells = this.chooseCell(4);
         var newCell = random(emptyCells);
@@ -97,12 +100,13 @@ class GrassEater {
             this.energy -= 5
             var newX = newCell[0];
             var newY = newCell[1];
-            matrix[newY][newX] = matrix[this.y][this.x]
+            matrix[newY][newX] = 2
             matrix[this.y][this.x] = 0
             this.x = newX
             this.y = newY
         }
     }
+    
     die() {
         matrix[this.y][this.x] = 0
         for (var i in grassEaterArr) {

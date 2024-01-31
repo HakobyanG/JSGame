@@ -1,7 +1,8 @@
 class Grass {
-    constructor(x, y) {
+    constructor(x, y, index) {
         this.x = x
         this.y = y
+        this.index = index
         this.multiply = 0
         this.directions = [
             [this.x - 1, this.y - 1],
@@ -13,8 +14,8 @@ class Grass {
             [this.x, this.y + 1],
             [this.x + 1, this.y + 1]
         ];
-
     }
+
     chooseCell(character) {
         var found = [];
         for (var i in this.directions) {
@@ -34,8 +35,7 @@ class Grass {
         var emptyCells = this.chooseCell(0);
         var newCell = random(emptyCells);
 
-        
-        setTimeout(function() {
+        if (newCell && this.multiply >= 15){
             var newX = newCell[0];
             var newY = newCell[1];
             matrix[newY][newX] = 1;
@@ -43,8 +43,7 @@ class Grass {
             var newGrass = new Grass(newX, newY);
             grassArr.push(newGrass);
             this.multiply = 0;
-            
-        }, 5000);
+        }
     }
 
 }
